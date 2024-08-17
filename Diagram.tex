@@ -15,24 +15,69 @@
 	\draw (0,0) circle [radius=10pt];
 		
 	% Body of the Feather
-	\node at (8,7.5) [rectangle, thick, draw, minimum width=16cm, minimum height=4cm]  {};
-	\node at (8,7.5) [font=\bf]{Feather Bluefruit 32u4};
+	\node at (8.5,7.5) [rectangle, thick, draw, minimum width=16cm, minimum height=4cm]  {};
+	\node at (8.5,7.5) [font=\bf]{Feather Bluefruit 32u4};
 	
-	% ESP32 Pins
-	\node (3V3) at (1,6) [pin] {} ;
-	\node at (1,7) {3V3};
-	\node (GNDESP) at (2,6) [pin]{} +(1,.5);
-	\node at (2,7) {GND};
-	\node (D4) at (5,6) [pin] {} +(1,.5);	
-	\node at (5,7) {D4};
-	\node (D5) at (9,6) [pin] {} +(1,.5);
-	\node at (9,7) {D5};
-	\node (D18) at (10,6) [pin] {} +(1,.5);
-	\node at (10,7) {D18};
-	\node (D19) at (11,6) [pin] {} +(1,.5);
-	\node at (11,7) {D19};
-	\node (VP) at (14,9) [pin] {} +(1,.5);
-	\node at (14,8) {VP};
+	% Feather Pins
+	% lower
+	\node (RST) at (1,6) [pin] {} ;
+	\node at (1,7) {RSW};
+	\node (3V) at (2,6) [pin]{} +(1,.5);
+	\node at (2,7) {3V};
+	\node (ARf) at (3,6) [pin] {} ;
+	\node at (3,7) {ARf};
+	\node (GNDF) at (4,6) [pin]{} +(1,.5);
+	\node at (4,7) {GND};
+	\node (A0) at (5,6) [pin] {} +(1,.5);	
+	\node at (5,7) {A0};
+	\node (A1) at (6,6) [pin] {} +(1,.5);	
+	\node at (6,7) {A1};
+	\node (A2) at (7,6) [pin] {} +(1,.5);	
+	\node at (7,7) {A2};
+	\node (A3) at (8,6) [pin] {} +(1,.5);	
+	\node at (8,7) {A3};
+	\node (A4) at (9,6) [pin] {} +(1,.5);
+	\node at (9,7) {A4};
+	\node (A5) at (10,6) [pin] {} +(1,.5);
+	\node at (10,7) {A5};
+	\node (SCK) at (11,6) [pin] {} +(1,.5);
+	\node at (11,7) {SCK};
+	\node (MOSI) at (12,6) [pin] {} +(1,.5);
+	\node at (12,7) {MOSI};
+	\node (MISO) at (13,6) [pin] {} +(1,.5);
+	\node at (13,7) {MISO};
+	\node (0RX) at (14,6) [pin] {} +(1,.5);
+	\node at (14,7) {0RX};
+	\node (1TX) at (15,6) [pin] {} +(1,.5);
+	\node at (15,7) {1TX};
+	\node (DFU) at (16,6) [pin] {} +(1,.5);
+	\node at (16,7) {DFU};
+	
+	% upper
+	\node (BATT) at (5,9) [pin] {} +(1,.5);	
+	\node at (5,8) {BATT};
+	\node (En) at (6,9) [pin] {} +(1,.5);	
+	\node at (6,8) {En};
+	\node (USB) at (7,9) [pin] {} +(1,.5);	
+	\node at (7,8) {USB};
+	\node (f13) at (8,9) [pin] {} +(1,.5);	
+	\node at (8,8) {13};
+	\node (f12) at (9,9) [pin] {} +(1,.5);
+	\node at (9,8) {12};
+	\node (f11) at (10,9) [pin] {} +(1,.5);
+	\node at (10,8) {11};
+	\node (f10) at (11,9) [pin] {} +(1,.5);
+	\node at (11,8) {10};
+	\node (f9) at (12,9) [pin] {} +(1,.5);
+	\node at (12,8) {9};
+	\node (f6) at (13,9) [pin] {} +(1,.5);
+	\node at (13,8) {6};
+	\node (f5) at (14,9) [pin] {} +(1,.5);
+	\node at (14,8) {5};
+	\node (SCL) at (15,9) [pin] {} +(1,.5);
+	\node at (15,8) {SCL};
+	\node (SDA) at (16,9) [pin] {} +(1,.5);
+	\node at (16,8) {SDA};
 
 	% Body of the TB6612
 	\node at (10.5,0) [rectangle, thick, draw, minimum width=11cm, minimum height=5cm]  {};
@@ -80,28 +125,28 @@
 	\draw (motor.south)  -- ++(0,-1) --  ++(1,0) -- (MOTORB2.south);
 	
 	% Grounds
-	\draw (GNDESP.south) -- ++(0,-1) -- ++ (0,0.5) node(GROUND)[ground]{};
+%	\draw (GNDESP.south) -- ++(0,-1) -- ++ (0,0.5) node(GROUND)[ground]{};
 	\draw (GNDTB_BOT1.south) -- ++(0,-1) -- ++ (0,0.5) node(GROUND)[ground]{};
 
 	% TB6612 connections
-	\draw (D4.south)  -- ++(0,-1.5) --  ++(3,0) to[short] (AIN1.north);
-	\draw (D5.south)  -- ++(0,-0.5) --  ++(-2,0) to[short] (AIN2.north);	
-	\draw (D18.south)  to[short] (BIN1.north);
-	\draw (D19.south)  to[short] (BIN2.north);
+%	\draw (D4.south)  -- ++(0,-1.5) --  ++(3,0) to[short] (AIN1.north);
+%	\draw (D5.south)  -- ++(0,-0.5) --  ++(-2,0) to[short] (AIN2.north);	
+%	\draw (D18.south)  to[short] (BIN1.north);
+%	\draw (D19.south)  to[short] (BIN2.north);
 	
 	% 3V3 Power connections
-	\draw[red] (3V3.south)  -- ++(0,-2.5) --  ++(5,0) -- (PWMA.north);
-	\draw[red] (3V3.south)  -- ++(0,-2.5) --  ++(8,0) -- (STBY.north);
-	\draw[red] (3V3.south)  -- ++(0,-2.5) --  ++(11,0) -- (PWMB.north);
-	\draw[red] (3V3.south)  -- ++(0,-0.5) -- ++(-2,0) -- ++(0,5.5) -- ++(12,0)
-		to[normally open push button, draw, color=black]  ++(1,0) ;
+%	\draw[red] (3V3.south)  -- ++(0,-2.5) --  ++(5,0) -- (PWMA.north);
+%	\draw[red] (3V3.south)  -- ++(0,-2.5) --  ++(8,0) -- (STBY.north);
+%	\draw[red] (3V3.south)  -- ++(0,-2.5) --  ++(11,0) -- (PWMB.north);
+%	\draw[red] (3V3.south)  -- ++(0,-0.5) -- ++(-2,0) -- ++(0,5.5) -- ++(12,0)
+%		to[normally open push button, draw, color=black]  ++(1,0) ;
 	
-	\draw(15,2.5) -- ++(0,2)  to[battery, v=$5V$] ++(-2,0)  -- ++(0,-2) ;
+%	\draw(15,2.5) -- ++(0,2)  to[battery, v=$5V$] ++(-2,0)  -- ++(0,-2) ;
 
-	\draw (VP.north) -- ++(0,1) 
-		to[R=10<\kilo \ohm>,-] ++(5,0) -- ++(0,-1) node(GROUND)[ground]{}; 
+%	\draw (VP.north) -- ++(0,1) 
+%		to[R=10<\kilo \ohm>,-] ++(5,0) -- ++(0,-1) node(GROUND)[ground]{}; 
 	  
-	  \draw (VP.north) -- ++(0,1) -- ++(-2,0); 
+%	  \draw (VP.north) -- ++(0,1) -- ++(-2,0); 
 
 
 \end{circuitikz}

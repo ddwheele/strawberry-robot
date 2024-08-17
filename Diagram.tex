@@ -1,0 +1,109 @@
+\documentclass{article}
+
+\usepackage[siunitx]{circuitikz}
+\usepackage{geometry}
+\geometry{letterpaper, landscape, margin=1cm}
+
+\begin{document}
+
+\begin{circuitikz}
+	[pin/.style={rectangle, draw, inner sep=0pt, minimum height=1cm, minimum width=0.5cm}]
+
+	% Draw a grid
+	%\clip(0,-10) rectangle (15,10);
+	\draw[step=1cm,gray,ultra thin] (0,-10) grid (20,10);
+	\draw (0,0) circle [radius=10pt];
+		
+	% Body of the Feather
+	\node at (8,7.5) [rectangle, thick, draw, minimum width=16cm, minimum height=4cm]  {};
+	\node at (8,7.5) [font=\bf]{Feather Bluefruit 32u4};
+	
+	% ESP32 Pins
+	\node (3V3) at (1,6) [pin] {} ;
+	\node at (1,7) {3V3};
+	\node (GNDESP) at (2,6) [pin]{} +(1,.5);
+	\node at (2,7) {GND};
+	\node (D4) at (5,6) [pin] {} +(1,.5);	
+	\node at (5,7) {D4};
+	\node (D5) at (9,6) [pin] {} +(1,.5);
+	\node at (9,7) {D5};
+	\node (D18) at (10,6) [pin] {} +(1,.5);
+	\node at (10,7) {D18};
+	\node (D19) at (11,6) [pin] {} +(1,.5);
+	\node at (11,7) {D19};
+	\node (VP) at (14,9) [pin] {} +(1,.5);
+	\node at (14,8) {VP};
+
+	% Body of the TB6612
+	\node at (10.5,0) [rectangle, thick, draw, minimum width=11cm, minimum height=5cm]  {};
+	\node at (10,0) [font=\bf]{TB6612};
+			
+	% TB6612 Pins
+	\node (PWMA) at (6,2) [pin] {} +(1,.5);
+	\node at (6,0.5) {PWMA};
+	\node (AIN2) at (7,2) [pin] {} +(1,.5);
+	\node at (7,1) {AIN2};
+	\node (AIN1) at (8,2) [pin] {} +(1,.5);
+	\node at (8,1) {AIN1};
+	\node (STBY) at (9,2) [pin] {} +(1,.5);
+	\node at (9,1) {STBY};	
+	\node (BIN1) at (10,2) [pin] {} +(1,.5);	
+	\node at (10,1) {BIN1};
+	\node (BIN2) at (11,2) [pin] {} +(1,.5);	
+	\node at (11,1) {BIN2};
+	\node (PWMB) at (12,2) [pin] {} +(1,.5);
+	\node at (12,0.5) {PWMB};
+	\node (GNDTB_TOP) at (13,2) [pin] {} +(1,.5);
+	\node at (13,1) {GND};
+	\node (VCC) at (14,2) [pin] {} +(1,.5);	
+	\node at (14,1) {VCC};
+	\node (VM) at (15,2) [pin] {} +(1,.5);
+	\node at (15,1) {VM};
+	
+	\node (MOTORA1) at (8,-2) [pin] {} +(1,.5);	
+	\node (MOTORA2) at (9,-2) [pin] {} +(1,.5);	
+	\node at (8.5,-1) {MOTORA};
+	\node (GNDTB_BOT1) at (10,-2) [pin] {} +(1,.5);		
+	\node (GNDTB_BOT2) at (11,-2) [pin] {} +(1,.5);	
+	\node at (10.5,-1) {GND};
+	\node (MOTORB1) at (12,-2) [pin] {} +(1,.5);	
+	\node (MOTORB2) at (13,-2) [pin] {} +(1,.5);	
+	\node at (12.5,-1) {MOTORB};
+	
+	% Motors 
+	\draw (8,-4) node[elmech](motor) {L};
+	\draw (MOTORA1.south) to (motor.north);
+	\draw (motor.south)  -- ++(0,-1) --  ++(1,0) -- (MOTORA2.south);
+	
+	\draw (12,-4) node[elmech](motor) {R};
+	\draw (MOTORB1.south) to (motor.north);
+	\draw (motor.south)  -- ++(0,-1) --  ++(1,0) -- (MOTORB2.south);
+	
+	% Grounds
+	\draw (GNDESP.south) -- ++(0,-1) -- ++ (0,0.5) node(GROUND)[ground]{};
+	\draw (GNDTB_BOT1.south) -- ++(0,-1) -- ++ (0,0.5) node(GROUND)[ground]{};
+
+	% TB6612 connections
+	\draw (D4.south)  -- ++(0,-1.5) --  ++(3,0) to[short] (AIN1.north);
+	\draw (D5.south)  -- ++(0,-0.5) --  ++(-2,0) to[short] (AIN2.north);	
+	\draw (D18.south)  to[short] (BIN1.north);
+	\draw (D19.south)  to[short] (BIN2.north);
+	
+	% 3V3 Power connections
+	\draw[red] (3V3.south)  -- ++(0,-2.5) --  ++(5,0) -- (PWMA.north);
+	\draw[red] (3V3.south)  -- ++(0,-2.5) --  ++(8,0) -- (STBY.north);
+	\draw[red] (3V3.south)  -- ++(0,-2.5) --  ++(11,0) -- (PWMB.north);
+	\draw[red] (3V3.south)  -- ++(0,-0.5) -- ++(-2,0) -- ++(0,5.5) -- ++(12,0)
+		to[normally open push button, draw, color=black]  ++(1,0) ;
+	
+	\draw(15,2.5) -- ++(0,2)  to[battery, v=$5V$] ++(-2,0)  -- ++(0,-2) ;
+
+	\draw (VP.north) -- ++(0,1) 
+		to[R=10<\kilo \ohm>,-] ++(5,0) -- ++(0,-1) node(GROUND)[ground]{}; 
+	  
+	  \draw (VP.north) -- ++(0,1) -- ++(-2,0); 
+
+
+\end{circuitikz}
+
+\end{document}

@@ -1,3 +1,8 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%   Strawberry Robot Diagram
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass{article}
 
 \usepackage[siunitx]{circuitikz}
@@ -125,7 +130,7 @@
 	\draw (motor.south)  -- ++(0,-1) --  ++(1,0) -- (MOTORB2.south);
 	
 	% Grounds
-%	\draw (GNDESP.south) -- ++(0,-1) -- ++ (0,0.5) node(GROUND)[ground]{};
+	\draw (GNDF) -- ++(0,-1) -- ++ (0,0.5) node(GROUND)[ground]{};
 	\draw (GNDTB_BOT1.south) -- ++(0,-1) -- ++ (0,0.5) node(GROUND)[ground]{};
 
 	% TB6612 connections
@@ -135,10 +140,10 @@
 %	\draw (D19.south)  to[short] (BIN2.north);
 	
 	% 3V3 Power connections
-%	\draw[red] (3V3.south)  -- ++(0,-2.5) --  ++(5,0) -- (PWMA.north);
-%	\draw[red] (3V3.south)  -- ++(0,-2.5) --  ++(8,0) -- (STBY.north);
-%	\draw[red] (3V3.south)  -- ++(0,-2.5) --  ++(11,0) -- (PWMB.north);
-%	\draw[red] (3V3.south)  -- ++(0,-0.5) -- ++(-2,0) -- ++(0,5.5) -- ++(12,0)
+	\draw[red] (3V.south)  -- ++(0,-2.5) --  ++(4,0) -- (PWMA.north);
+	\draw[red] (3V.south)  -- ++(0,-2.5) --  ++(7,0) -- (STBY.north);
+	\draw[red] (3V.south)  -- ++(0,-2.5) --  ++(10,0) -- (PWMB.north);
+	%\draw[red] (3V.south)  -- ++(0,-0.5) -- ++(-2,0) -- ++(0,5.5) -- ++(12,0)
 %		to[normally open push button, draw, color=black]  ++(1,0) ;
 	
 %	\draw(15,2.5) -- ++(0,2)  to[battery, v=$5V$] ++(-2,0)  -- ++(0,-2) ;

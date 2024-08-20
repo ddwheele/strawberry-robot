@@ -85,47 +85,49 @@
 	\node at (16,8) {SDA};
 
 	% Body of the TB6612
-	\node at (10.5,0) [rectangle, thick, draw, minimum width=11cm, minimum height=5cm]  {};
-	\node at (10,0) [font=\bf]{TB6612};
+	\node at (7.5,0) [rectangle, thick, draw, minimum width=11cm, minimum height=5cm]  {};
+	\node at (7,0) [font=\bf]{TB6612};
 			
 	% TB6612 Pins
-	\node (PWMA) at (6,2) [pin] {} +(1,.5);
-	\node at (6,0.5) {PWMA};
-	\node (AIN2) at (7,2) [pin] {} +(1,.5);
-	\node at (7,1) {AIN2};
-	\node (AIN1) at (8,2) [pin] {} +(1,.5);
-	\node at (8,1) {AIN1};
-	\node (STBY) at (9,2) [pin] {} +(1,.5);
-	\node at (9,1) {STBY};	
-	\node (BIN1) at (10,2) [pin] {} +(1,.5);	
-	\node at (10,1) {BIN1};
-	\node (BIN2) at (11,2) [pin] {} +(1,.5);	
-	\node at (11,1) {BIN2};
-	\node (PWMB) at (12,2) [pin] {} +(1,.5);
-	\node at (12,0.5) {PWMB};
-	\node (GNDTB_TOP) at (13,2) [pin] {} +(1,.5);
-	\node at (13,1) {GND};
-	\node (VCC) at (14,2) [pin] {} +(1,.5);	
-	\node at (14,1) {VCC};
-	\node (VM) at (15,2) [pin] {} +(1,.5);
-	\node at (15,1) {VM};
+	\node (PWMA) at (3,2) [pin] {} +(1,.5);
+	\node at (3,0.5) {PWMA};
+	\node (AIN2) at (4,2) [pin] {} +(1,.5);
+	\node at (4,1) {AIN2};
+	\node (AIN1) at (5,2) [pin] {} +(1,.5);
+	\node at (5,1) {AIN1};
+	\node (STBY) at (6,2) [pin] {} +(1,.5);
+	\node at (6,1) {STBY};	
+	\node (BIN1) at (7,2) [pin] {} +(1,.5);	
+	\node at (7,1) {BIN1};
+	\node (BIN2) at (8,2) [pin] {} +(1,.5);	
+	\node at (8,1) {BIN2};
+	\node (PWMB) at (9,2) [pin] {} +(1,.5);
+	\node at (9,0.5) {PWMB};
+	\node (GNDTB_TOP) at (10,2) [pin] {} +(1,.5);
+	\node at (10,1) {GND};
+	\node (VCC) at (11,2) [pin] {} +(1,.5);	
+	\node at (11,1) {VCC};
+	\node (VM) at (12,2) [pin] {} +(1,.5);
+	\node at (12,1) {VM};
 	
-	\node (MOTORA1) at (8,-2) [pin] {} +(1,.5);	
-	\node (MOTORA2) at (9,-2) [pin] {} +(1,.5);	
-	\node at (8.5,-1) {MOTORA};
-	\node (GNDTB_BOT1) at (10,-2) [pin] {} +(1,.5);		
-	\node (GNDTB_BOT2) at (11,-2) [pin] {} +(1,.5);	
-	\node at (10.5,-1) {GND};
-	\node (MOTORB1) at (12,-2) [pin] {} +(1,.5);	
-	\node (MOTORB2) at (13,-2) [pin] {} +(1,.5);	
-	\node at (12.5,-1) {MOTORB};
+	\node (MOTORA1) at (5,-2) [pin] {} +(1,.5);	
+	\node (MOTORA2) at (6,-2) [pin] {} +(1,.5);	
+	\node at (5.5,-1) {MOTORA};
+	\node (GNDTB_BOT1) at (7,-2) [pin] {} +(1,.5);		
+	\node (GNDTB_BOT2) at (8,-2) [pin] {} +(1,.5);	
+	\node at (7.5,-1) {GND};
+	\node (MOTORB1) at (9,-2) [pin] {} +(1,.5);	
+	\node (MOTORB2) at (10,-2) [pin] {} +(1,.5);	
+	\node at (9.5,-1) {MOTORB};
 	
 	% Motors 
-	\draw (8,-4) node[elmech](motor) {L};
+	% Left
+	\draw (5,-4) node[elmech](motor) {L};
 	\draw (MOTORA1.south) to (motor.north);
 	\draw (motor.south)  -- ++(0,-1) --  ++(1,0) -- (MOTORA2.south);
 	
-	\draw (12,-4) node[elmech](motor) {R};
+	% Right
+	\draw (9,-4) node[elmech](motor) {R};
 	\draw (MOTORB1.south) to (motor.north);
 	\draw (motor.south)  -- ++(0,-1) --  ++(1,0) -- (MOTORB2.south);
 	
@@ -134,15 +136,15 @@
 	\draw (GNDTB_BOT1.south) -- ++(0,-1) -- ++ (0,0.5) node(GROUND)[ground]{};
 
 	% TB6612 connections
-%	\draw (D4.south)  -- ++(0,-1.5) --  ++(3,0) to[short] (AIN1.north);
-%	\draw (D5.south)  -- ++(0,-0.5) --  ++(-2,0) to[short] (AIN2.north);	
-%	\draw (D18.south)  to[short] (BIN1.north);
-%	\draw (D19.south)  to[short] (BIN2.north);
+	\draw (A0.south)  to[short] (AIN1.north);
+	\draw (A1.south)  -- ++(0,-1.5) --  ++(-2,0) to[short] (AIN2.north);	
+	\draw (A2.south)  to[short] (BIN1.north);
+	\draw (A3.south)  to[short] (BIN2.north);
 	
 	% 3V3 Power connections
-	\draw[red] (3V.south)  -- ++(0,-2.5) --  ++(4,0) -- (PWMA.north);
-	\draw[red] (3V.south)  -- ++(0,-2.5) --  ++(7,0) -- (STBY.north);
-	\draw[red] (3V.south)  -- ++(0,-2.5) --  ++(10,0) -- (PWMB.north);
+	\draw[red] (3V.south)  -- ++(0,-2.5) --  ++(1,0) -- (PWMA.north);
+	\draw[red] (3V.south)  -- ++(0,-2.5) --  ++(4,0) -- (STBY.north);
+	\draw[red] (3V.south)  -- ++(0,-2.5) --  ++(7,0) -- (PWMB.north);
 	%\draw[red] (3V.south)  -- ++(0,-0.5) -- ++(-2,0) -- ++(0,5.5) -- ++(12,0)
 %		to[normally open push button, draw, color=black]  ++(1,0) ;
 	

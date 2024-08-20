@@ -16,8 +16,8 @@
 
 	% Draw a grid
 	%\clip(0,-10) rectangle (15,10);
-	\draw[step=1cm,gray,ultra thin] (0,-10) grid (20,10);
-	\draw (0,0) circle [radius=10pt];
+	%\draw[step=1cm,gray,ultra thin] (0,-10) grid (25,12);
+	%\draw (0,0) circle [radius=10pt];
 		
 	% Body of the Feather
 	\node at (8.5,7.5) [rectangle, thick, draw, minimum width=16cm, minimum height=4cm]  {};
@@ -79,9 +79,9 @@
 	\node at (13,8) {6};
 	\node (f5) at (14,9) [pin] {} +(1,.5);
 	\node at (14,8) {5};
-	\node (SCL) at (15,9) [pin] {} +(1,.5);
+	\node (SCLF) at (15,9) [pin] {} +(1,.5);
 	\node at (15,8) {SCL};
-	\node (SDA) at (16,9) [pin] {} +(1,.5);
+	\node (SDAF) at (16,9) [pin] {} +(1,.5);
 	\node at (16,8) {SDA};
 
 	% Body of the TB6612
@@ -105,7 +105,7 @@
 	\node at (9,0.5) {PWMB};
 	\node (GNDTB_TOP) at (10,2) [pin] {} +(1,.5);
 	\node at (10,1) {GND};
-	\node (VCC) at (11,2) [pin] {} +(1,.5);	
+	\node (VCCTB) at (11,2) [pin] {} +(1,.5);	
 	\node at (11,1) {VCC};
 	\node (VM) at (12,2) [pin] {} +(1,.5);
 	\node at (12,1) {VM};
@@ -120,16 +120,30 @@
 	\node (MOTORB2) at (10,-2) [pin] {} +(1,.5);	
 	\node at (9.5,-1) {MOTORB};
 	
+	% Body of OLED Display
+	\node at (19.5,8) [rectangle, thick, draw, minimum width=4cm, minimum height=3cm]  {};
+	\node at (19.5,7) [font=\bf]{OLED};
+
+	% OLED Pins
+	\node (GNDO) at (18,9) [pin] {} +(1,.5);
+	\node at (18, 8) {GND};
+	\node (VCCO) at (19,9) [pin] {} +(1,.5);
+	\node at (19, 8) {VCC};
+	\node (SCLO) at (20,9) [pin] {} +(1,.5);
+	\node at (20, 8) {SCL};
+	\node (SDAO) at (21,9) [pin] {} +(1,.5);
+	\node at (21, 8) {VCC};
+
 	% Motors 
 	% Left
 	\draw (5,-4) node[elmech](motor) {L};
 	\draw (MOTORA1.south) to (motor.north);
-	\draw (motor.south)  -- ++(0,-1) --  ++(1,0) -- (MOTORA2.south);
+	\draw (motor.south)  -- ++(0,-0.5) --  ++(1,0) -- (MOTORA2.south);
 	
 	% Right
 	\draw (9,-4) node[elmech](motor) {R};
 	\draw (MOTORB1.south) to (motor.north);
-	\draw (motor.south)  -- ++(0,-1) --  ++(1,0) -- (MOTORB2.south);
+	\draw (motor.south)  -- ++(0,-0.5) --  ++(1,0) -- (MOTORB2.south);
 	
 	% Grounds
 	\draw (GNDF) -- ++(0,-1) -- ++ (0,0.5) node(GROUND)[ground]{};
@@ -148,7 +162,8 @@
 	%\draw[red] (3V.south)  -- ++(0,-0.5) -- ++(-2,0) -- ++(0,5.5) -- ++(12,0)
 %		to[normally open push button, draw, color=black]  ++(1,0) ;
 	
-%	\draw(15,2.5) -- ++(0,2)  to[battery, v=$5V$] ++(-2,0)  -- ++(0,-2) ;
+	% 5V Battery
+	\draw(12,2.5) -- ++(0,2)  to[battery, v=$5V$] ++(-2,0)  -- ++(0,-2) ;
 
 %	\draw (VP.north) -- ++(0,1) 
 %		to[R=10<\kilo \ohm>,-] ++(5,0) -- ++(0,-1) node(GROUND)[ground]{}; 

@@ -114,6 +114,11 @@ void setup(void)
   while (!Serial);  // required for Flora & Micro
   delay(500);
 
+  pinMode(AIN1_PIN, OUTPUT);
+  pinMode(AIN2_PIN, OUTPUT);
+  pinMode(BIN1_PIN, OUTPUT);
+  pinMode(BIN2_PIN, OUTPUT);
+
   Serial.begin(115200);
   Serial.println(F("******************************"));
   Serial.println(F("Strawberry Controller"));
@@ -178,6 +183,42 @@ void setup(void)
     @brief  Constantly poll for new command or response data
 */
 /**************************************************************************/
+
+#define FWD_BUTTON 5
+#define REV_BUTTON 5
+#define LEFT_BUTTON 5
+#define RIGHT_BUTTON 5
+
+void motorA_FWD() {
+  digitalWrite(AIN1_PIN, HIGH);
+  digitalWrite(AIN2_PIN, LOW);
+}
+
+void motorA_OFF() {
+  digitalWrite(AIN1_PIN, LOW);
+  digitalWrite(AIN2_PIN, LOW);
+}
+
+void motorA_REV() {
+  digitalWrite(AIN1_PIN, LOW);
+  digitalWrite(AIN2_PIN, HIGH);
+}
+
+void motorB_FWD() {
+  digitalWrite(BIN1_PIN, HIGH);
+  digitalWrite(BIN2_PIN, LOW);
+}
+
+void motorB_OFF() {
+  digitalWrite(BIN1_PIN, LOW);
+  digitalWrite(BIN2_PIN, LOW);
+}
+
+void motorB_REV() {
+  digitalWrite(BIN1_PIN, LOW);
+  digitalWrite(BIN2_PIN, HIGH);
+}
+
 void loop(void)
 {
   /* Wait for new data to arrive */
@@ -197,5 +238,23 @@ void loop(void)
     } else {
       Serial.println(" released");
     }
-  }
+
+    if(!pressed) {
+      
+      motorA_OFF();
+      motorB_OFF();  
+      
+    } else if(buttnum == FWD_BUTTON) {
+        motorA_FWD();
+        motorB_FWD();
+    } else if(buttnum == REV_BUTTON) {
+        motorA_REV();
+        motorB_REV();
+    } else if(buttnum == RIGHT_BUTTON) {
+        motorA_OFF();
+        motorB_FWD();
+    } else if(buttnum == LEFT_BUTTON) {
+        motorA_FWD();
+        motorB_OFF();
+    }
 }

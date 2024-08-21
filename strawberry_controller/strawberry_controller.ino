@@ -185,9 +185,9 @@ void setup(void)
 /**************************************************************************/
 
 #define FWD_BUTTON 5
-#define REV_BUTTON 5
-#define LEFT_BUTTON 5
-#define RIGHT_BUTTON 5
+#define REV_BUTTON 6
+#define LEFT_BUTTON 7
+#define RIGHT_BUTTON 8
 
 void motorA_FWD() {
   digitalWrite(AIN1_PIN, HIGH);
@@ -257,4 +257,5 @@ void loop(void)
         motorA_FWD();
         motorB_OFF();
     }
+  }
 }

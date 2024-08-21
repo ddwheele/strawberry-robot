@@ -2,9 +2,9 @@
 Code for a small two-wheeled robot
 
 Feather Outputs
-* 2 motors - total 4 GPIO out
-* 1 servo - 2 GPIO out??
-* 1 electromagnet - ???
+* 2 motors - total 4 GPIO 
+* 1 servo - 1 GPIO 
+* 1 electromagnet - 1 GPIO
 * 1 OLED screen - Vin, GND, SCL, SDA (2 GPIO)
 * LEDs?
 * Buzzer?

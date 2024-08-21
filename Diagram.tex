@@ -86,7 +86,7 @@
 
 	% Body of the TB6612
 	\node at (7.5,0) [rectangle, thick, draw, minimum width=11cm, minimum height=5cm]  {};
-	\node at (7,0) [font=\bf]{TB6612};
+	\node at (7.5,-0.25) [font=\bf]{Motor Controller (TB6612)};
 			
 	% TB6612 Pins
 	\node (PWMA) at (3,2) [pin] {} +(1,.5);
@@ -122,17 +122,17 @@
 	
 	% Body of OLED Display
 	\node at (19.5,8) [rectangle, thick, draw, minimum width=4cm, minimum height=3cm]  {};
-	\node at (19.5,7) [font=\bf]{SSD1306};
+	\node at (19.5,7) [font=\bf]{OLED (SSD1306)};
 
 	% OLED Pins
-	\node (GNDO) at (18,9) [pin] {} +(1,.5);
-	\node at (18, 8) {GND};
-	\node (VCCO) at (19,9) [pin] {} +(1,.5);
-	\node at (19, 8) {VCC};
-	\node (SCLO) at (20,9) [pin] {} +(1,.5);
-	\node at (20, 8) {SCL};
-	\node (SDAO) at (21,9) [pin] {} +(1,.5);
-	\node at (21, 8) {VCC};
+	\node (SDAO) at (18,9) [pin] {} +(1,.5);
+	\node at (18, 8) {SDA};
+	\node (SCLO) at (19,9) [pin] {} +(1,.5);
+	\node at (19, 8) {SCL};
+	\node (VCCO) at (20,9) [pin] {} +(1,.5);
+	\node at (20, 8) {VCC};
+	\node (GNDO) at (21,9) [pin] {} +(1,.5);
+	\node at (21, 8) {GND};
 
 	% Motors 
 	% Left
@@ -148,6 +148,7 @@
 	% Grounds
 	\draw (GNDF) -- ++(0,-1) -- ++ (0,0.5) node(GROUND)[ground]{};
 	\draw (GNDTB_BOT1.south) -- ++(0,-1) -- ++ (0,0.5) node(GROUND)[ground]{};
+	\draw (GNDO) -- ++(0,1) -- ++ (1,0)  -- ++ (0,-1) node(GROUND)[ground]{};
 
 	% TB6612 connections
 	\draw (A0.south)  to[short] (AIN1.north);

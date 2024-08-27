@@ -97,12 +97,6 @@ class Motor {
 Motor leftMotor(18, 19, 11);
 Motor rightMotor(20, 21, 12);
 
-/**************************************************************************/
-/*!
-    @brief  Sets up the HW an the BLE module (this function is called
-            automatically on startup)
-*/
-/**************************************************************************/
 void setup(void)
 {
   delay(500);
@@ -116,7 +110,7 @@ void setup(void)
   /* Disable command echo from Bluefruit */
   ble.echo(false);
 
- // printBluefruitInfo();
+  // printBluefruitInfo();
 
   Serial.println(F("******************************"));
   Serial.println(F("Strawberry Controller"));
@@ -124,7 +118,6 @@ void setup(void)
 
   waitForConnection();
 }
-
 
 void loop(void)
 {
@@ -136,38 +129,46 @@ void loop(void)
   if (packetBuffer[1] == 'B') {
     uint8_t buttonNumber = packetBuffer[2] - '0';
     boolean pressed = packetBuffer[3] - '0';
-    Serial.print ("Button "); Serial.print(buttonNumber);
-    if (pressed) {
-      Serial.println(" pressed");
-    } else {
-      Serial.println(" released");
-    }
 
-    if (!pressed) {
+    printButtonPress(buttonNumber, pressed);
+    executeButtonPress(buttonNumber, pressed);
+  }
+}
 
-      leftMotor.driveOff();
-      rightMotor.driveOff();
+void executeButtonPress(uint8_t buttonNumber, boolean pressed) {
+  if (!pressed) {
 
-    } else if (buttonNumber == FWD_BUTTON) {
+    leftMotor.driveOff();
+    rightMotor.driveOff();
 
-      leftMotor.driveForwardFast();
-      rightMotor.driveForwardFast();
+  } else if (buttonNumber == FWD_BUTTON) {
 
-    } else if (buttonNumber == REV_BUTTON) {
+    leftMotor.driveForwardFast();
+    rightMotor.driveForwardFast();
 
-      leftMotor.driveReverseFast();
-      rightMotor.driveReverseFast();
+  } else if (buttonNumber == REV_BUTTON) {
 
-    } else if (buttonNumber == RIGHT_BUTTON) {
+    leftMotor.driveReverseFast();
+    rightMotor.driveReverseFast();
 
-      leftMotor.driveForwardSlow();
-      rightMotor.driveReverseSlow();
+  } else if (buttonNumber == RIGHT_BUTTON) {
 
-    } else if (buttonNumber == LEFT_BUTTON) {
+    leftMotor.driveForwardSlow();
+    rightMotor.driveReverseSlow();
 
-      leftMotor.driveReverseSlow();
-      rightMotor.driveForwardSlow();
-    }
+  } else if (buttonNumber == LEFT_BUTTON) {
+
+    leftMotor.driveReverseSlow();
+    rightMotor.driveForwardSlow();
+  }
+}
+
+void printButtonPress(uint8_t buttonNumber, boolean pressed) {
+  Serial.print ("Button "); Serial.print(buttonNumber);
+  if (pressed) {
+    Serial.println(" pressed");
+  } else {
+    Serial.println(" released");
   }
 }
 

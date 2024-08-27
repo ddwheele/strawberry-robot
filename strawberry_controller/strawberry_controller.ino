@@ -5,7 +5,6 @@
    This code is modified from example code provided by Adafruit that
    reads button press packets from the Bluefruit Connect App.
 */
-
 #include <string.h>
 #include <Arduino.h>
 #include <SPI.h>
@@ -27,6 +26,11 @@
 #define MODE_LED_BEHAVIOUR          "MODE"
 /*=========================================================================*/
 
+#define FWD_BUTTON 5
+#define REV_BUTTON 6
+#define LEFT_BUTTON 7
+#define RIGHT_BUTTON 8
+
 // Create the bluefruit object
 Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
 
@@ -34,6 +38,8 @@ Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_
 extern uint8_t packetBuffer[];
 
 class Motor {
+    static const int FAST = 180;
+    static const int SLOW = 90;
     int m_output1; // number of pin connected to IN1 on motor controller
     int m_output2; // number of pin connected to IN2 on motor controller
     Servo m_pwm; // number of pin connected to PWM on motor controller
@@ -46,6 +52,22 @@ class Motor {
 
       pinMode(m_output1, OUTPUT);
       pinMode(m_output2, OUTPUT);
+    }
+
+    void driveForwardFast() {
+      driveForward(FAST);
+    }
+
+    void driveForwardSlow() {
+      driveForward(SLOW);
+    }
+
+    void driveReverseFast() {
+      driveReverse(FAST);
+    }
+
+    void driveReverseSlow() {
+      driveReverse(SLOW);
     }
 
     /**
@@ -94,7 +116,7 @@ void setup(void)
   /* Disable command echo from Bluefruit */
   ble.echo(false);
 
-  printBluefruitInfo();
+ // printBluefruitInfo();
 
   Serial.println(F("******************************"));
   Serial.println(F("Strawberry Controller"));
@@ -103,19 +125,6 @@ void setup(void)
   waitForConnection();
 }
 
-/**************************************************************************/
-/*!
-    @brief  Constantly poll for new command or response data
-*/
-/**************************************************************************/
-
-#define FWD_BUTTON 5
-#define REV_BUTTON 6
-#define LEFT_BUTTON 7
-#define RIGHT_BUTTON 8
-
-#define TOP_SPEED 180
-#define LOW_SPEED 90
 
 void loop(void)
 {
@@ -141,27 +150,26 @@ void loop(void)
 
     } else if (buttonNumber == FWD_BUTTON) {
 
-      leftMotor.driveForward(TOP_SPEED);
-      rightMotor.driveForward(TOP_SPEED);
+      leftMotor.driveForwardFast();
+      rightMotor.driveForwardFast();
 
     } else if (buttonNumber == REV_BUTTON) {
 
-      leftMotor.driveReverse(TOP_SPEED);
-      rightMotor.driveReverse(TOP_SPEED);
+      leftMotor.driveReverseFast();
+      rightMotor.driveReverseFast();
 
     } else if (buttonNumber == RIGHT_BUTTON) {
 
-      leftMotor.driveForward(LOW_SPEED);
-      rightMotor.driveReverse(LOW_SPEED);
+      leftMotor.driveForwardSlow();
+      rightMotor.driveReverseSlow();
 
     } else if (buttonNumber == LEFT_BUTTON) {
 
-      leftMotor.driveReverse(LOW_SPEED);
-      rightMotor.driveForward(LOW_SPEED);
+      leftMotor.driveReverseSlow();
+      rightMotor.driveForwardSlow();
     }
   }
 }
-
 
 void initializeBluefruit() {
   /* Initialize the module */
@@ -191,8 +199,6 @@ void waitForConnection() {
     delay(500);
   }
 
-  Serial.println(F("******************************"));
-
   // LED Activity command is only supported from 0.6.6
   if ( ble.isVersionAtLeast(MINIMUM_FIRMWARE_VERSION) )
   {
@@ -202,9 +208,9 @@ void waitForConnection() {
   }
 
   // Set Bluefruit to DATA mode
-  Serial.println( F("Switching to DATA mode!") );
+  Serial.println( F("Switching to DATA mode") );
   ble.setMode(BLUEFRUIT_MODE_DATA);
-
+  Serial.println(F("========================="));
   Serial.println(F("Ready to drive!"));
 }
 

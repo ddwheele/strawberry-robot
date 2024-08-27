@@ -83,7 +83,24 @@ Motor rightMotor(20, 21, 12);
 /**************************************************************************/
 void setup(void)
 {
-  initialize();
+  delay(500);
+
+  Serial.begin(115200);
+
+  initializeBluefruit();
+
+  doFactoryReset();
+
+  /* Disable command echo from Bluefruit */
+  ble.echo(false);
+
+  printBluefruitInfo();
+
+  Serial.println(F("******************************"));
+  Serial.println(F("Strawberry Controller"));
+  Serial.println(F("******************************"));
+
+  waitForConnection();
 }
 
 /**************************************************************************/
@@ -123,43 +140,41 @@ void loop(void)
       rightMotor.driveOff();
 
     } else if (buttonNumber == FWD_BUTTON) {
-      
+
       leftMotor.driveForward(TOP_SPEED);
       rightMotor.driveForward(TOP_SPEED);
-      
+
     } else if (buttonNumber == REV_BUTTON) {
-      
+
       leftMotor.driveReverse(TOP_SPEED);
       rightMotor.driveReverse(TOP_SPEED);
-      
+
     } else if (buttonNumber == RIGHT_BUTTON) {
-      
+
       leftMotor.driveForward(LOW_SPEED);
       rightMotor.driveReverse(LOW_SPEED);
-      
+
     } else if (buttonNumber == LEFT_BUTTON) {
-      
+
       leftMotor.driveReverse(LOW_SPEED);
       rightMotor.driveForward(LOW_SPEED);
     }
   }
 }
 
-void initialize() {
-   
-  delay(500);
 
-  Serial.begin(115200);
-
-  /* Initialise the module */
-  Serial.print(F("Initialising the Bluefruit LE module: "));
+void initializeBluefruit() {
+  /* Initialize the module */
+  Serial.print(F("Initializing the Bluefruit LE module: "));
 
   if ( !ble.begin(VERBOSE_MODE) )
   {
     Error(F("Couldn't find Bluefruit, make sure it's in CoMmanD mode & check wiring?"));
   }
   Serial.println( F("OK!") );
+}
 
+void doFactoryReset() {
   if ( FACTORYRESET_ENABLE )
   {
     /* Perform a factory reset to make sure everything is in a known state */
@@ -168,20 +183,9 @@ void initialize() {
       Error(F("Couldn't factory reset"));
     }
   }
+}
 
-  /* Disable command echo from Bluefruit */
-  ble.echo(false);
-
-  Serial.println("Requesting Bluefruit info:");
-  /* Print Bluefruit information */
-  ble.info();
-
-  Serial.println(F("******************************"));
-  Serial.println(F("Strawberry Controller"));
-  Serial.println(F("******************************"));
-
-  ble.verbose(false);  // debug info is a little annoying after this point!
-
+void waitForConnection() {
   /* Wait for connection */
   while (! ble.isConnected()) {
     delay(500);
@@ -202,6 +206,14 @@ void initialize() {
   ble.setMode(BLUEFRUIT_MODE_DATA);
 
   Serial.println(F("Ready to drive!"));
+}
+
+void printBluefruitInfo() {
+  /* Print Bluefruit information */
+  Serial.println("Requesting Bluefruit info:");
+
+  ble.info();
+  ble.verbose(false);  // debug info is a little annoying after this point!
 }
 
 // A small helper

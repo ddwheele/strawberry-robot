@@ -16,6 +16,7 @@
 #include "BluefruitConfig.h"
 
 #include "packetParser.h"
+#include "Motor.h"
 
 #if SOFTWARE_SERIAL_AVAILABLE
 #include <SoftwareSerial.h>
@@ -36,63 +37,6 @@ Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_
 
 // the packet buffer
 extern uint8_t packetBuffer[];
-
-class Motor {
-    static const int FAST = 180;
-    static const int SLOW = 90;
-    int m_output1; // number of pin connected to IN1 on motor controller
-    int m_output2; // number of pin connected to IN2 on motor controller
-    Servo m_pwm; // number of pin connected to PWM on motor controller
-
-  public:
-    Motor(int out1, int out2, int pwm) {
-      m_output1 = out1;
-      m_output2 = out2;
-      m_pwm.attach(pwm);
-
-      pinMode(m_output1, OUTPUT);
-      pinMode(m_output2, OUTPUT);
-    }
-
-    void driveForwardFast() {
-      driveForward(FAST);
-    }
-
-    void driveForwardSlow() {
-      driveForward(SLOW);
-    }
-
-    void driveReverseFast() {
-      driveReverse(FAST);
-    }
-
-    void driveReverseSlow() {
-      driveReverse(SLOW);
-    }
-
-    /**
-       Takes a "speed" between 0 and 180
-    */
-    void driveForward(int spd) {
-      digitalWrite(m_output1, HIGH);
-      digitalWrite(m_output2, LOW);
-      m_pwm.write(spd);
-    }
-
-    /**
-       Takes a "speed" between 0 and 180
-    */
-    void driveReverse(int spd) {
-      digitalWrite(m_output1, LOW);
-      digitalWrite(m_output2, HIGH);
-      m_pwm.write(spd);
-    }
-
-    void driveOff() {
-      digitalWrite(m_output1, LOW);
-      digitalWrite(m_output2, LOW);
-    }
-};
 
 Motor leftMotor(18, 19, 11);
 Motor rightMotor(20, 21, 12);

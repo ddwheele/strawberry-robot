@@ -22,6 +22,7 @@
 #include <string.h>
 #include <Arduino.h>
 #include <SPI.h>
+#include <Servo.h>
 #include "Adafruit_BLE.h"
 #include "Adafruit_BluefruitLE_SPI.h"
 #include "Adafruit_BluefruitLE_UART.h"
@@ -74,27 +75,34 @@ extern uint8_t packetbuffer[];
 class Motor {
     int m_output1; // number of pin connected to IN1 on motor controller
     int m_output2; // number of pin connected to IN2 on motor controller
-    int m_pwm; // number of pin connected to PWM on motor controller
+    Servo m_pwm; // number of pin connected to PWM on motor controller
 
   public:
     Motor(int out1, int out2, int pwm) {
       m_output1 = out1;
       m_output2 = out2;
-      m_pwm = pwm;
+      m_pwm.attach(pwm);
 
       pinMode(m_output1, OUTPUT);
       pinMode(m_output2, OUTPUT);
-      pinMode(m_pwm, OUTPUT);
     }
 
-    void driveForward() {
+    /**
+       Takes a "speed" between 0 and 180
+    */
+    void driveForward(int spd) {
       digitalWrite(m_output1, HIGH);
       digitalWrite(m_output2, LOW);
+      m_pwm.write(spd);
     }
 
-    void driveReverse() {
+    /**
+       Takes a "speed" between 0 and 180
+    */
+    void driveReverse(int spd) {
       digitalWrite(m_output1, LOW);
       digitalWrite(m_output2, HIGH);
+      m_pwm.write(spd);
     }
 
     void driveOff() {
@@ -190,6 +198,9 @@ void setup(void)
 #define LEFT_BUTTON 7
 #define RIGHT_BUTTON 8
 
+#define TOP_SPEED 180
+#define LOW_SPEED 90
+
 void loop(void)
 {
   /* Wait for new data to arrive */
@@ -216,17 +227,24 @@ void loop(void)
       rightMotor.driveOff();
 
     } else if (buttnum == FWD_BUTTON) {
-      leftMotor.driveForward();
-      rightMotor.driveForward();
+      
+      leftMotor.driveForward(TOP_SPEED);
+      rightMotor.driveForward(TOP_SPEED);
+      
     } else if (buttnum == REV_BUTTON) {
-      leftMotor.driveReverse();
-      rightMotor.driveReverse();
+      
+      leftMotor.driveReverse(TOP_SPEED);
+      rightMotor.driveReverse(TOP_SPEED);
+      
     } else if (buttnum == RIGHT_BUTTON) {
-      leftMotor.driveForward();
-      rightMotor.driveReverse();
+      
+      leftMotor.driveForward(LOW_SPEED);
+      rightMotor.driveReverse(LOW_SPEED);
+      
     } else if (buttnum == LEFT_BUTTON) {
-      leftMotor.driveReverse();
-      rightMotor.driveForward();
+      
+      leftMotor.driveReverse(LOW_SPEED);
+      rightMotor.driveForward(LOW_SPEED);
     }
   }
 }

@@ -9,21 +9,11 @@
 #include "Adafruit_BluefruitLE_SPI.h"
 #include "Adafruit_BluefruitLE_UART.h"
 
-
-#define PACKET_ACC_LEN                  (15)
-#define PACKET_GYRO_LEN                 (15)
-#define PACKET_MAG_LEN                  (15)
-#define PACKET_QUAT_LEN                 (19)
-#define PACKET_BUTTON_LEN               (5)
-#define PACKET_COLOR_LEN                (6)
-#define PACKET_LOCATION_LEN             (15)
-
-//    READ_BUFSIZE            Size of the read buffer for incoming packets
-#define READ_BUFSIZE                    (20)
+#include "packetParser.h"
 
 
 /* Buffer to hold incoming characters */
-uint8_t packetbuffer[READ_BUFSIZE+1];
+uint8_t packetBuffer[READ_BUFSIZE+1];
 
 /**************************************************************************/
 /*!
@@ -78,23 +68,23 @@ uint8_t readPacket(Adafruit_BLE *ble, uint16_t timeout)
 {
   uint16_t origtimeout = timeout, replyidx = 0;
 
-  memset(packetbuffer, 0, READ_BUFSIZE);
+  memset(packetBuffer, 0, READ_BUFSIZE);
 
   while (timeout--) {
     if (replyidx >= 20) break;
-    if ((packetbuffer[1] == 'A') && (replyidx == PACKET_ACC_LEN))
+    if ((packetBuffer[1] == 'A') && (replyidx == PACKET_ACC_LEN))
       break;
-    if ((packetbuffer[1] == 'G') && (replyidx == PACKET_GYRO_LEN))
+    if ((packetBuffer[1] == 'G') && (replyidx == PACKET_GYRO_LEN))
       break;
-    if ((packetbuffer[1] == 'M') && (replyidx == PACKET_MAG_LEN))
+    if ((packetBuffer[1] == 'M') && (replyidx == PACKET_MAG_LEN))
       break;
-    if ((packetbuffer[1] == 'Q') && (replyidx == PACKET_QUAT_LEN))
+    if ((packetBuffer[1] == 'Q') && (replyidx == PACKET_QUAT_LEN))
       break;
-    if ((packetbuffer[1] == 'B') && (replyidx == PACKET_BUTTON_LEN))
+    if ((packetBuffer[1] == 'B') && (replyidx == PACKET_BUTTON_LEN))
       break;
-    if ((packetbuffer[1] == 'C') && (replyidx == PACKET_COLOR_LEN))
+    if ((packetBuffer[1] == 'C') && (replyidx == PACKET_COLOR_LEN))
       break;
-    if ((packetbuffer[1] == 'L') && (replyidx == PACKET_LOCATION_LEN))
+    if ((packetBuffer[1] == 'L') && (replyidx == PACKET_LOCATION_LEN))
       break;
 
     while (ble->available()) {
@@ -102,7 +92,7 @@ uint8_t readPacket(Adafruit_BLE *ble, uint16_t timeout)
       if (c == '!') {
         replyidx = 0;
       }
-      packetbuffer[replyidx] = c;
+      packetBuffer[replyidx] = c;
       replyidx++;
       timeout = origtimeout;
     }
@@ -111,19 +101,19 @@ uint8_t readPacket(Adafruit_BLE *ble, uint16_t timeout)
     delay(1);
   }
 
-  packetbuffer[replyidx] = 0;  // null term
+  packetBuffer[replyidx] = 0;  // null term
 
   if (!replyidx)  // no data or timeout 
     return 0;
-  if (packetbuffer[0] != '!')  // doesn't start with '!' packet beginning
+  if (packetBuffer[0] != '!')  // doesn't start with '!' packet beginning
     return 0;
   
   // check checksum!
   uint8_t xsum = 0;
-  uint8_t checksum = packetbuffer[replyidx-1];
+  uint8_t checksum = packetBuffer[replyidx-1];
   
   for (uint8_t i=0; i<replyidx-1; i++) {
-    xsum += packetbuffer[i];
+    xsum += packetBuffer[i];
   }
   xsum = ~xsum;
 
@@ -131,11 +121,10 @@ uint8_t readPacket(Adafruit_BLE *ble, uint16_t timeout)
   if (xsum != checksum)
   {
     Serial.print("Checksum mismatch in packet : ");
-    printHex(packetbuffer, replyidx+1);
+    printHex(packetBuffer, replyidx+1);
     return 0;
   }
   
   // checksum passed!
   return replyidx;
 }
-

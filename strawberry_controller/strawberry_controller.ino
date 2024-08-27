@@ -1,23 +1,23 @@
 /***
- * Controller code for a robot with two powered wheels with an Adafruit 
- * Feather 32u4.
- * 
- * This code is modified from example code provided by Adafruit that
- * reads button press packets from the Bluefruit Connect App.
- */
+   Controller code for a robot with two powered wheels with an Adafruit
+   Feather 32u4.
+
+   This code is modified from example code provided by Adafruit that
+   reads button press packets from the Bluefruit Connect App.
+*/
 
 /*********************************************************************
- This is an example for our nRF51822 based Bluefruit LE modules
+  This is an example for our nRF51822 based Bluefruit LE modules
 
- Pick one up today in the adafruit shop!
+  Pick one up today in the adafruit shop!
 
- Adafruit invests time and resources providing this open source code,
- please support Adafruit and open-source hardware by purchasing
- products from Adafruit!
+  Adafruit invests time and resources providing this open source code,
+  please support Adafruit and open-source hardware by purchasing
+  products from Adafruit!
 
- MIT license, check LICENSE for more information
- All text above, and the splash screen below must be included in
- any redistribution
+  MIT license, check LICENSE for more information
+  All text above, and the splash screen below must be included in
+  any redistribution
 *********************************************************************/
 #include <string.h>
 #include <Arduino.h>
@@ -29,50 +29,19 @@
 #include "BluefruitConfig.h"
 
 #if SOFTWARE_SERIAL_AVAILABLE
-  #include <SoftwareSerial.h>
+#include <SoftwareSerial.h>
 #endif
 
-/*=========================================================================
-    APPLICATION SETTINGS
-
-    FACTORYRESET_ENABLE       Perform a factory reset when running this sketch
-   
-                              Enabling this will put your Bluefruit LE module
-                              in a 'known good' state and clear any config
-                              data set in previous sketches or projects, so
-                              running this at least once is a good idea.
-   
-                              When deploying your project, however, you will
-                              want to disable factory reset by setting this
-                              value to 0.  If you are making changes to your
-                              Bluefruit LE device via AT commands, and those
-                              changes aren't persisting across resets, this
-                              is the reason why.  Factory reset will erase
-                              the non-volatile memory where config data is
-                              stored, setting it back to factory default
-                              values.
-       
-                              Some sketches that require you to bond to a
-                              central device (HID mouse, keyboard, etc.)
-                              won't work at all with this feature enabled
-                              since the factory reset will clear all of the
-                              bonding data stored on the chip, meaning the
-                              central device won't be able to reconnect.
-    MINIMUM_FIRMWARE_VERSION  Minimum firmware version to have some new features
-    MODE_LED_BEHAVIOUR        LED activity, valid options are
-                              "DISABLE" or "MODE" or "BLEUART" or
-                              "HWUART"  or "SPI"  or "MANUAL"
-    -----------------------------------------------------------------------*/
-    #define FACTORYRESET_ENABLE         1
-    #define MINIMUM_FIRMWARE_VERSION    "0.6.6"
-    #define MODE_LED_BEHAVIOUR          "MODE"
+#define FACTORYRESET_ENABLE         1
+#define MINIMUM_FIRMWARE_VERSION    "0.6.6"
+#define MODE_LED_BEHAVIOUR          "MODE"
 /*=========================================================================*/
 
 // Create the bluefruit object, either software serial...uncomment these lines
 /*
-SoftwareSerial bluefruitSS = SoftwareSerial(BLUEFRUIT_SWUART_TXD_PIN, BLUEFRUIT_SWUART_RXD_PIN);
+  SoftwareSerial bluefruitSS = SoftwareSerial(BLUEFRUIT_SWUART_TXD_PIN, BLUEFRUIT_SWUART_RXD_PIN);
 
-Adafruit_BluefruitLE_UART ble(bluefruitSS, BLUEFRUIT_UART_MODE_PIN,
+  Adafruit_BluefruitLE_UART ble(bluefruitSS, BLUEFRUIT_UART_MODE_PIN,
                       BLUEFRUIT_UART_CTS_PIN, BLUEFRUIT_UART_RTS_PIN);
 */
 
@@ -102,6 +71,41 @@ void printHex(const uint8_t * data, const uint32_t numBytes);
 // the packet buffer
 extern uint8_t packetbuffer[];
 
+class Motor {
+    int m_output1; // number of pin connected to IN1 on motor controller
+    int m_output2; // number of pin connected to IN2 on motor controller
+    int m_pwm; // number of pin connected to PWM on motor controller
+
+  public:
+    Motor(int out1, int out2, int pwm) {
+      m_output1 = out1;
+      m_output2 = out2;
+      m_pwm = pwm;
+
+      pinMode(m_output1, OUTPUT);
+      pinMode(m_output2, OUTPUT);
+      pinMode(m_pwm, OUTPUT);
+    }
+
+    void driveForward() {
+      digitalWrite(m_output1, HIGH);
+      digitalWrite(m_output2, LOW);
+    }
+
+    void driveReverse() {
+      digitalWrite(m_output1, LOW);
+      digitalWrite(m_output2, HIGH);
+    }
+
+    void driveOff() {
+      digitalWrite(m_output1, LOW);
+      digitalWrite(m_output2, LOW);
+    }
+};
+
+Motor leftMotor(18, 19, 11);
+Motor rightMotor(20, 21, 12);
+
 
 /**************************************************************************/
 /*!
@@ -114,15 +118,7 @@ void setup(void)
   while (!Serial);  // required for Flora & Micro
   delay(500);
 
-  pinMode(AIN1_PIN, OUTPUT);
-  pinMode(AIN2_PIN, OUTPUT);
-  pinMode(BIN1_PIN, OUTPUT);
-  pinMode(BIN2_PIN, OUTPUT);
-
   Serial.begin(115200);
-  Serial.println(F("******************************"));
-  Serial.println(F("Strawberry Controller"));
-  Serial.println(F("******************************"));
 
   /* Initialise the module */
   Serial.print(F("Initialising the Bluefruit LE module: "));
@@ -137,7 +133,7 @@ void setup(void)
   {
     /* Perform a factory reset to make sure everything is in a known state */
     Serial.println(F("Performing a factory reset: "));
-    if ( ! ble.factoryReset() ){
+    if ( ! ble.factoryReset() ) {
       error(F("Couldn't factory reset"));
     }
   }
@@ -149,6 +145,11 @@ void setup(void)
   /* Print Bluefruit information */
   ble.info();
 
+  Serial.println(F("******************************"));
+  Serial.println(F("Strawberry Controller"));
+  Serial.println(F("******************************"));
+
+
   Serial.println(F("Please use Adafruit Bluefruit LE app to connect in Controller mode"));
   Serial.println(F("Then select the game controller"));
   Serial.println();
@@ -157,7 +158,7 @@ void setup(void)
 
   /* Wait for connection */
   while (! ble.isConnected()) {
-      delay(500);
+    delay(500);
   }
 
   Serial.println(F("******************************"));
@@ -189,36 +190,6 @@ void setup(void)
 #define LEFT_BUTTON 7
 #define RIGHT_BUTTON 8
 
-void motorA_FWD() {
-  digitalWrite(AIN1_PIN, HIGH);
-  digitalWrite(AIN2_PIN, LOW);
-}
-
-void motorA_OFF() {
-  digitalWrite(AIN1_PIN, LOW);
-  digitalWrite(AIN2_PIN, LOW);
-}
-
-void motorA_REV() {
-  digitalWrite(AIN1_PIN, LOW);
-  digitalWrite(AIN2_PIN, HIGH);
-}
-
-void motorB_FWD() {
-  digitalWrite(BIN1_PIN, HIGH);
-  digitalWrite(BIN2_PIN, LOW);
-}
-
-void motorB_OFF() {
-  digitalWrite(BIN1_PIN, LOW);
-  digitalWrite(BIN2_PIN, LOW);
-}
-
-void motorB_REV() {
-  digitalWrite(BIN1_PIN, LOW);
-  digitalWrite(BIN2_PIN, HIGH);
-}
-
 void loop(void)
 {
   /* Wait for new data to arrive */
@@ -239,23 +210,23 @@ void loop(void)
       Serial.println(" released");
     }
 
-    if(!pressed) {
-      
-      motorA_OFF();
-      motorB_OFF();  
-      
-    } else if(buttnum == FWD_BUTTON) {
-        motorA_FWD();
-        motorB_FWD();
-    } else if(buttnum == REV_BUTTON) {
-        motorA_REV();
-        motorB_REV();
-    } else if(buttnum == RIGHT_BUTTON) {
-        motorA_OFF();
-        motorB_FWD();
-    } else if(buttnum == LEFT_BUTTON) {
-        motorA_FWD();
-        motorB_OFF();
+    if (!pressed) {
+
+      leftMotor.driveOff();
+      rightMotor.driveOff();
+
+    } else if (buttnum == FWD_BUTTON) {
+      leftMotor.driveForward();
+      rightMotor.driveForward();
+    } else if (buttnum == REV_BUTTON) {
+      leftMotor.driveReverse();
+      rightMotor.driveReverse();
+    } else if (buttnum == RIGHT_BUTTON) {
+      leftMotor.driveForward();
+      rightMotor.driveReverse();
+    } else if (buttnum == LEFT_BUTTON) {
+      leftMotor.driveReverse();
+      rightMotor.driveForward();
     }
   }
 }

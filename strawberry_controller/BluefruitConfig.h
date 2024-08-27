@@ -55,10 +55,3 @@
 #define BLUEFRUIT_SPI_SCK              13
 #define BLUEFRUIT_SPI_MISO             12
 #define BLUEFRUIT_SPI_MOSI             11
-
-// GPIO PINS
-// ----------------------------------------------------------------------------------------------
-#define AIN1_PIN             18
-#define AIN2_PIN             19
-#define BIN1_PIN             20
-#define BIN2_PIN             21

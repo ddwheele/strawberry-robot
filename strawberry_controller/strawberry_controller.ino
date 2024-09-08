@@ -38,8 +38,8 @@ Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_
 // the packet buffer
 extern uint8_t packetBuffer[];
 
-Motor leftMotor(18, 19, 11);
-Motor rightMotor(20, 21, 12);
+Motor leftMotor(18, 19, 11); // (A0, A1, 11)
+Motor rightMotor(20, 21, 12); // (A2, A3, 12)
 
 void setup(void)
 {

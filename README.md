@@ -12,6 +12,6 @@ Feather Inputs (via BlueFruit Connect -> Controller -> Control Pad)
 * Servo input - button 1 + 3
 * Magnet input - button 2 + 4
 
-<img src="./Diagram.svg">
+<img src="./Strawberry_bb.svg">
 
 

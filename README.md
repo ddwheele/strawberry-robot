@@ -1,15 +1,14 @@
 # strawberry-robot
 Code for a small two-wheeled robot
 
-Feather Outputs
-* 2 motors - total 4 GPIO, 2 PWD
-* 1 servo - 1 PWD
-* 1 OLED screen - Vin, GND, SCL, SDA (2 GPIO)
+Microcontroller: Bluefruit Feather 32u4
+* 2 motors - TT 5V
+* 1 castor wheel
+* 1 servo - to move "head"
+* 1 OLED screen - to display "Face"
 
-Feather Inputs (via BlueFruit Connect -> Controller -> Control Pad)
-* Drive inputs - buttons 5 -8
-
-<img src="./Strawberry_bb.svg">
+Feather Inputs (via BlueFruit Connect App -> Controller -> Control Pad)
+* Drive inputs - buttons 5-8
 
 Board layout:
 
